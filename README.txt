@@ -11,7 +11,7 @@ v1.1: Improvements & optimization
 	- Friend IDs saved smartly so they're only looked up once. Saves ~50% runtime
 	- Population sized up to 100 000
 
-v1.1_parallel_try: side branch looking into parallel processing
+v1.1_parallel_try: side project looking into parallel processing
 	- attempt at implementing parallel processing. Turns out as slow or slower than v1.1
 
 v1.2: Improvements on infectivity
