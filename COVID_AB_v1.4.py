@@ -37,6 +37,8 @@ class person:
     self.infectivity                = 0
     self.friends                    = []
   
+  # TODO remove function definitions from person class and write as separate functions
+
   def die(self):
     '''
     set properties to those of a dead person
