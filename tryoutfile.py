@@ -1,18 +1,21 @@
-import numpy as np
-import matplotlib.pyplot as plt
+# import numpy as np
+# import matplotlib.pyplot as plt
 
-xx = np.random.randn(100000)
+# xx = np.random.randn(100000)
 
-X = []
+# X = []
 
-mu = 0
-sigma = 0.5
+# mu = 0
+# sigma = 0.5
 
-for x in xx:
-	X.append(np.exp(mu + sigma * x))
+# for x in xx:
+# 	X.append(np.exp(mu + sigma * x))
 
-fig1, ax1 = plt.subplots()
+# fig1, ax1 = plt.subplots()
 
-ax1.hist(X,  bins=100, edgecolor='k')
+# ax1.hist(X,  bins=100, edgecolor='k')
 
-plt.show()
+# plt.show()
+
+print('Error while setting up the population, maximum tries (10) '
+               'reached. Raising error.')

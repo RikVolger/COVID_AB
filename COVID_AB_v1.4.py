@@ -7,7 +7,8 @@ import pandas
 import time
 import os
 
-colors = ['#424242ff', '#b6311cff', '#DB5237ff', '#FF7253ff', '#FF9270ff', '#8DC3FFff', '#69b668ff']
+colors = ['#424242ff', '#b6311cff', '#DB5237ff', '#FF7253ff', 
+          '#FF9270ff', '#8DC3FFff', '#69b668ff']
 
 class person:
   """
@@ -20,7 +21,7 @@ class person:
     === NEEDS REWORK ===
     Update of documentation postponed to after revision to avoid double work
     """
-    
+
     # person identification, used throughout the models - advised to count upwards from 0
     self.ID                         = ID
     # number of contacts for this person integer or float
@@ -94,8 +95,8 @@ class person:
     today : int or float 
         Indicates the days since the start of the simulation
     infectivity_table : 2D-array of floats
-        2D-array with each row the progression of infectivity for a specific fate, 
-        columns the day since infection
+        2D-array with each row the progression of infectivity for a specific 
+        fate, columns the day since infection
     """
 
     relative_day = today - self.day_of_infection
@@ -109,7 +110,8 @@ class person:
     elif 'critical' in self.fate:
       self.infectivity = infectivity_lookup(infectivity_table, 3, relative_day)
 
-  def update(self, population_today, population_yesterday, today, infectivity_table):
+  def update(self, population_today, population_yesterday, today, 
+             infectivity_table):
     """Updates persons status for today
     
     Checks status of person on the current day, and updates status accordingly
@@ -250,7 +252,8 @@ def construct_society(population_size, n_infected, n_contacts, fates, p_fates,
   for attempts in range(10):
     try:
       # contact matrix in int8 format to reduce size in RAM
-      contact_matrix = np.zeros((population_size,population_size), dtype=np.int8)
+      contact_matrix = np.zeros((population_size,population_size), 
+                                dtype=np.int8)
 
       for ID in range(population_size):
         if ID in ID_infected_0:
@@ -260,11 +263,11 @@ def construct_society(population_size, n_infected, n_contacts, fates, p_fates,
           day_inf = 0
           infection_factor = 1
 
-          population_initial.append(person(ID, n_contacts, infected, infective, day_inf, 
-            infection_factor, fate))
+          population_initial.append(person(ID, n_contacts, infected, infective, 
+            day_inf, infection_factor, fate))
 
-          population_initial[ID].friends = fill_contact_matrix(contact_matrix, ID, n_contacts, 
-            population_size)
+          population_initial[ID].friends = fill_contact_matrix(contact_matrix, 
+            ID, n_contacts)
         else:
           fate = np.random.choice(fates, 1, p=p_fates)[0]
           infected = False
@@ -272,18 +275,19 @@ def construct_society(population_size, n_infected, n_contacts, fates, p_fates,
           day_inf = 0
           infection_factor = 0
 
-          population_initial.append(person(ID, n_contacts, infected, infective, day_inf, 
-            infection_factor, fate))
+          population_initial.append(person(ID, n_contacts, infected, infective, 
+            day_inf, infection_factor, fate))
 
-          population_initial[ID].friends = fill_contact_matrix(contact_matrix, ID, n_contacts, 
-            population_size)
+          population_initial[ID].friends = fill_contact_matrix(contact_matrix, 
+            ID, n_contacts)
       break
     except ValueError as e:
       if attempts < 9:
         print('Error while setting up the population, trying again')
         # time.sleep(0.1)
       else:
-        print('Error while setting up the population, maximum tries (10) reached. Raising error.')
+        print('Error while setting up the population, maximum tries (10) '
+               'reached. Raising error.')
         raise
 
   if figflag:
@@ -304,7 +308,9 @@ def plot_contacts(total_contacts):
   """
 
   fig1, ax1 = plt.subplots()
-  ax1.hist(total_contacts, bins=range(1,int(total_contacts.max()+1)), edgecolor='k')
+  ax1.hist(total_contacts, 
+           bins = range(1, int(total_contacts.max() + 1)), 
+           edgecolor = 'k')
 
 def store_data(contact_matrix):
   """Stores contact matrix to disk
@@ -451,7 +457,8 @@ def process_generated_data(population_over_time, n_days, figflag, colors):
           n['critical'][day] += 1
       else:
         n['susceptible'][day] += 1
-    # print('Day {:#02}: {}\t{}\t{}\t{}'.format(day, n_susceptible[day], n_infected[day], n_recovered[day], n_dead[day]))
+    # print('Day {:#02}: {}\t{}\t{}\t{}'.format(day, n_susceptible[day], 
+    #       n_infected[day], n_recovered[day], n_dead[day]))
   
   if figflag:
     plot_extracted_data(n, n_days, colors)
@@ -489,16 +496,18 @@ def plot_extracted_data(n, n_days, colors):
   ax2.set_prop_cycle(cycler(color=colors))
   # TODO make the generation of legend tags and data plot automated
   #      (from the keys in the n dictionary?)
-  s1 = ax2.stackplot(t, n['dead'], n['critical'], n['severe'], n['symp'], n['asym'], 
-                     n['recovered'], n['susceptible'])
-  ax2.legend(['$n_{dead}$', '$n_{critical}$', '$n_{severe}$', '$n_{symptomatic}$', 
-              '$n_{asymptomatic}$', '$n_{recoverd}$', '$n_{susceptible}$'], 
+  s1 = ax2.stackplot(t, n['dead'], n['critical'], n['severe'], n['symp'], 
+                     n['asym'], n['recovered'], n['susceptible'])
+  ax2.legend(['$n_{dead}$', '$n_{critical}$', '$n_{severe}$', 
+              '$n_{symptomatic}$', '$n_{asymptomatic}$', '$n_{recoverd}$', 
+              '$n_{susceptible}$'], 
              loc='upper left')
   ax2.set_xlabel('Time (days)')
   ax2.set_ylabel('People')
   ax2.set_title('Progression of infective disease. Model COVID_AB_v1.2')
 
-  fig2.savefig('figures/{}_disease progression.png'.format(time.strftime('%y%m%d-%H%M%S')))
+  fig2.savefig('figures/{}_disease progression.png'.format(
+                time.strftime('%y%m%d-%H%M%S')))
 
   # plt.show()
 
@@ -588,18 +597,21 @@ def agent_based_simulation( population_size=100000, n_infected=5, n_contacts=20,
 
   print('\nInitializing system\n---------------\n')
 
-  fates = ['non_symptomatic', 'symptomatic', 'severe', 'critical_recover', 'critical_death']
+  fates = ['non_symptomatic', 'symptomatic', 'severe', 'critical_recover', 
+           'critical_death']
   infectivity_table = load_infectivity()
 
   # TODO implement choice between constructing new society and using old network
   if new_society:
-    population_initial = construct_society(population_size, n_infected, n_contacts, fates, p_fates, figflag)
+    population_initial = construct_society(population_size, n_infected, 
+                                           n_contacts, fates, p_fates, figflag)
   # else
     # load_society here
   
   print('Initial population set up\n---------------\n')
 
-  population_over_time = run_time_simulation(population_initial, n_days, infectivity_table)
+  population_over_time = run_time_simulation(population_initial, n_days, 
+                                             infectivity_table)
   process_generated_data(population_over_time, n_days, figflag, colors)
 
 def main():
